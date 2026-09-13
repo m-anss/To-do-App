@@ -6,9 +6,6 @@ const modal = document.querySelector(".modal");
 
 let draggedElement = null;
 
-// function updateButtonText(theme){
-//     btn.innerText = theme.includes("style-light.css")? 'Dark Mode' : 'Light Mode';
-// }
 
 btn.addEventListener("click", () => {
     const current = themeLink.getAttribute("href");
@@ -43,33 +40,6 @@ if (saved) {
         icon.className = "fa-solid fa-moon";
     }
 }
-
-// btn.addEventListener("click", () => {
-//     const current = themeLink.getAttribute('href');
-
-
-//     const newTheme = current === 'style-light.css'? 'style-dark.css': 'style-light.css';
-//     themeLink.setAttribute('href', newTheme);
-
-
-//     localStorage.setItem('theme', newTheme);
-//     // updateButtonText(newThemetheme);
-// });
-
-// const saved = localStorage.getItem('theme');
-
-// if(saved){
-//     themeLink.setAttribute('href', saved)
-//     // updateButtonText(saved)
-// }
-
-// btn.addEventListener("click", function(){
-// if(theme.textContent == "Dark"){
-//         theme.innerText = "Light Mode";
-//     }else{
-//         theme.innerText = "Dark Mode";
-//     }
-// })
 
 
 // =========================
