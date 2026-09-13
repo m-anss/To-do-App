@@ -1,140 +1,274 @@
-let tasksData = {}
-
+const columns = [...document.querySelectorAll(".column")];
+const btn = document.querySelector("#theme");
+const themeLink = document.querySelector("#theme-link");
 const todo = document.querySelector("#todo");
-const progress = document.querySelector("#progress");
-const done = document.querySelector("#done");
-const columns = [todo, progress, done];
+const modal = document.querySelector(".modal");
 
 let draggedElement = null;
 
+// function updateButtonText(theme){
+//     btn.innerText = theme.includes("style-light.css")? 'Dark Mode' : 'Light Mode';
+// }
 
+btn.addEventListener("click", () => {
+    const current = themeLink.getAttribute("href");
 
-function updateTaskCount(){
-    columns.forEach(col => {
-    const tasks = col.querySelectorAll(".task");
-    const count = col.querySelector(".left");
+    const newTheme =
+        current === "style-light.css"
+            ? "style-dark.css"
+            : "style-light.css";
 
-    tasksData[ col.id] = Array.from(tasks).map( t => {
-        return{
-            title: t.querySelector("h2").innerText,
-            desc: t.querySelector("p").innerText
-        }
-    })
-    localStorage.setItem("tasks", JSON.stringify(tasksData));
+    themeLink.setAttribute("href", newTheme);
+    localStorage.setItem("theme", newTheme);
 
-    count.innerText = tasks.length;
-    })
-}
+    // Change icon
+    const icon = btn.querySelector("i");
 
+    if (newTheme === "style-dark.css") {
+        icon.className = "fa-solid fa-sun";
+    } else {
+        icon.className = "fa-solid fa-moon";
+    }
+});
+const saved = localStorage.getItem("theme");
 
-if (localStorage.getItem("tasks")){
-    const data = JSON.parse(localStorage.getItem("tasks"));
+if (saved) {
+    themeLink.setAttribute("href", saved);
 
-    for(const col in data ){
-        const column = document.querySelector(`#${col}`);
-        data[col]. forEach(task =>{
-        const div = document.createElement("div")
-    div.classList.add("task")
+    const icon = btn.querySelector("i");
 
-    div.setAttribute("draggable", "true")
-    div.innerHTML = `
-                <h2>${task.title}</h2>
-                <p>${task.desc}</p>
-                <button>Delete</button>
-                `
-    column.appendChild(div);
-
-    div.addEventListener("drag", (e) => {
-        draggedElement = div;
-    })
-
-        })        
-        const tasks = column.querySelectorAll(".task");
-        const count = column.querySelector(".left");
-        count.innerText = tasks.length;
+    if (saved === "style-dark.css") {
+        icon.className = "fa-solid fa-sun";
+    } else {
+        icon.className = "fa-solid fa-moon";
     }
 }
 
-
-const tasks = document.querySelectorAll(".task");
-tasks.forEach(task => {
-    task.addEventListener("drag", (e) => {
-        draggedElement = task;
-    })
-})
-
-function dragging(column){
-    column.addEventListener("dragenter", function(e){
-    e.preventDefault();
-    column.classList.add("drag");
-})
-    column.addEventListener("dragleave", function(e){
-    e.preventDefault();
-    column.classList.remove("drag");
-})
-    column.addEventListener("drop", function(e){
-    e.preventDefault();
-    column.appendChild(draggedElement);
-    column.classList.remove("drag");
-
-    updateTaskCount();
-
-})
-    column.addEventListener("dragover", function(e){
-        e.preventDefault();
-        
-        
-    })
-}
-dragging(todo);
-dragging(progress);
-dragging(done);
+// btn.addEventListener("click", () => {
+//     const current = themeLink.getAttribute('href');
 
 
-const toggle = document.querySelector("#toggleModal");
-const modal = document.querySelector(".modal");
-const bgModal = document.querySelector(".modal .bg");
-const cancelTask = document.querySelector("#cancel-new-task");
+//     const newTheme = current === 'style-light.css'? 'style-dark.css': 'style-light.css';
+//     themeLink.setAttribute('href', newTheme);
 
-toggle.addEventListener("click", () => {
-    modal.classList.add("active");
-})
-bgModal.addEventListener("click", () => {
-    modal.classList.remove("active");
-})
-cancelTask.addEventListener("click", function(){
-    modal.classList.remove("active");
-})
 
-const addNewTask = document.querySelector("#add-new-task");
+//     localStorage.setItem('theme', newTheme);
+//     // updateButtonText(newThemetheme);
+// });
 
-addNewTask.addEventListener("click", function(){
-    const taskTitle = document.querySelector("#task-title").value
-    const textarea = document.querySelector("#textArea").value
+// const saved = localStorage.getItem('theme');
 
-    const div = document.createElement("div")
-    div.classList.add("task")
+// if(saved){
+//     themeLink.setAttribute('href', saved)
+//     // updateButtonText(saved)
+// }
 
-    div.setAttribute("draggable", "true")
+// btn.addEventListener("click", function(){
+// if(theme.textContent == "Dark"){
+//         theme.innerText = "Light Mode";
+//     }else{
+//         theme.innerText = "Dark Mode";
+//     }
+// })
+
+
+// =========================
+// CREATE TASK
+// =========================
+
+function createTask(title, desc) {
+    const div = document.createElement("div");
+
+    div.className = "task";
+    div.draggable = true;
+
     div.innerHTML = `
-                <h2>${taskTitle}</h2>
-                <p>${textarea}</p>
-                <button>Delete</button>
-                `
-    todo.appendChild(div)
+        <h2>${title}</h2>
+        <p>${desc}</p>
+        <button class="delete-btn">Delete</button>
+    `;
+
+    return div;
+}
+
+
+// =========================
+// UPDATE COUNTS
+// =========================
+
+function updateTaskCount() {
+    columns.forEach(column => {
+        const count = column.querySelector(".left");
+        const tasks = column.querySelectorAll(".task");
+
+        count.textContent = tasks.length;
+    });
+}
+
+
+// =========================
+// SAVE TASKS
+// =========================
+
+function saveTasks() {
+    const tasksData = {};
+
+    columns.forEach(column => {
+        tasksData[column.id] = [...column.querySelectorAll(".task")].map(task => ({
+            title: task.querySelector("h2").textContent,
+            desc: task.querySelector("p").textContent
+        }));
+    });
+
+    localStorage.setItem("tasks", JSON.stringify(tasksData));
+}
+
+
+// =========================
+// LOAD TASKS
+// =========================
+
+function loadTasks() {
+    const savedTasks = JSON.parse(localStorage.getItem("tasks"));
+
+    if (!savedTasks) return;
+
+    Object.entries(savedTasks).forEach(([columnId, tasks]) => {
+        const column = document.querySelector(`#${columnId}`);
+
+        if (!column) return;
+
+        tasks.forEach(task => {
+            column.appendChild(
+                createTask(task.title, task.desc)
+            );
+        });
+    });
 
     updateTaskCount();
-    modal.classList.remove("active");
+}
 
-    document.querySelector("#task-title").value = "";
-    document.querySelector("#textArea").value = "";
-
-    
-    div.addEventListener("drag", () => {
-        draggedElement = div;
-    })
+loadTasks();
 
 
-    
-})
+// =========================
+// DRAG TASK
+// =========================
 
+document.addEventListener("dragstart", e => {
+    if (e.target.classList.contains("task")) {
+        draggedElement = e.target;
+    }
+});
+
+
+// =========================
+// DELETE TASK
+// =========================
+
+document.addEventListener("click", e => {
+    if (e.target.classList.contains("delete-btn")) {
+        e.target.closest(".task").remove();
+
+        updateTaskCount();
+        saveTasks();
+    }
+});
+
+
+// =========================
+// DRAG & DROP COLUMNS
+// =========================
+
+columns.forEach(column => {
+
+    column.addEventListener("dragover", e => {
+        e.preventDefault();
+    });
+
+
+    column.addEventListener("dragenter", e => {
+        e.preventDefault();
+
+        column.classList.add("drag");
+    });
+
+
+    column.addEventListener("dragleave", () => {
+        column.classList.remove("drag");
+    });
+
+
+    column.addEventListener("drop", e => {
+        e.preventDefault();
+
+        if (!draggedElement) return;
+
+        column.appendChild(draggedElement);
+
+        column.classList.remove("drag");
+
+        updateTaskCount();
+        saveTasks();
+    });
+
+});
+
+
+// =========================
+// MODAL
+// =========================
+
+document.querySelector("#toggleModal")
+    .addEventListener("click", () => {
+        modal.classList.add("active");
+    });
+
+
+document.querySelector(".modal .bg")
+    .addEventListener("click", () => {
+        modal.classList.remove("active");
+    });
+
+
+document.querySelector("#cancel-new-task")
+    .addEventListener("click", () => {
+        modal.classList.remove("active");
+    });
+
+
+// =========================
+// ADD NEW TASK
+// =========================
+
+document.querySelector("#add-new-task")
+    .addEventListener("click", () => {
+
+        const titleInput = document.querySelector("#task-title");
+        const descInput = document.querySelector("#textArea");
+
+        const title = titleInput.value.trim();
+        const desc = descInput.value.trim();
+
+
+        if (!title) {
+            alert("Please enter a task title");
+            return;
+        }
+
+
+        const task = createTask(title, desc);
+
+        todo.appendChild(task);
+
+
+        updateTaskCount();
+        saveTasks();
+
+
+        modal.classList.remove("active");
+
+
+        titleInput.value = "";
+        descInput.value = "";
+    });
