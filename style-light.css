@@ -1,0 +1,248 @@
+*{
+    padding: 0%;
+    margin: 0%;
+    box-sizing: border-box;
+}
+html,body{
+    height: 100%;
+    width: 100%;
+}
+.theme-color{
+    background-color: #ffffff;
+    color: #222;
+}
+main{
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+button{
+    cursor: pointer;
+}
+:root{
+    --bg-color: #e0dbdb;
+    --bg-color2: #b0b0b0;
+    --bg-color3: #EF4444;
+    --primary-text: #100f0f;
+
+    --nav-padding: 15px 30px;
+    --section-padding: 15px 30px;
+
+    --padding-s: 5px;
+    --padding-m: 10px;
+    --padding-l: 15px;
+    --padding-xl: 20px;
+    --padding-xxl: 25px;
+
+    --bg: #ffffff;
+    --text: #111111;
+
+
+    [data-theme="dark"]{
+        --bg: #111111;
+        --text: #ffffff;
+    }
+}
+@font-face {
+    font-family: font1;
+    src: url(first-font.ttf);
+}
+@font-face {
+    font-family: font2;
+    src: url(sec-font.ttf);
+}
+
+body{
+    background-color: var(--bg-color);
+    color: var(--primary-text);
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+
+}
+nav{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: sticky;
+    top: 0px;
+    z-index: 10; 
+}
+.nav-bar{
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.2);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--nav-padding);
+    border-radius: 50px;
+    width: 80%;
+}
+.nav-bar .right h2{
+    font-size: 35px;
+    color: var(--primary-text);
+}
+.nav-bar .left {
+    display: flex;
+    gap: 10px;
+}
+.nav-bar .left button{
+    width: 190px;
+    height: 50px;
+    background-color: var(--bg-color3);
+    color: var(--primary-text);
+    font-weight: 800;
+    font-size: 25px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-family: font2;
+}
+.nav-bar .left button:hover{
+    transition: transform 0.5s ease;
+    transform: scale(1.05);
+}
+.nav-bar .left .theme button{
+    background-color: transparent;
+    color: var(--primary-text);
+    padding: var(--padding-s);
+    width: auto;
+    /* width: 100px; */
+    font-weight: 200;
+    font-family: font2;
+}    
+section{
+    display: flex;
+    padding: var(--section-padding);
+    flex-grow: 1;
+    background-color: var(--bg-color);
+    justify-content: space-between;
+    gap: var(--padding-xxl);
+}
+section .column{
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.2);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+    flex-grow: 1;
+    border-radius: 10px;
+    padding: var(--padding-s);
+    width: 100%;
+} 
+section .column .heading{
+    display: flex;
+    justify-content: space-between;
+    padding: var(--nav-padding);
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,0.2);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+    border-radius: 10px;
+    font-weight: 800;
+    font-family: font2;
+}
+.task{
+    padding: var(--padding-m);
+    margin-top: 10px;
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,0.2);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+    border-radius: 10px;
+    cursor: pointer;
+}
+section .column .task h2, p{
+    margin-bottom: 10px;
+}
+section .column .task button{
+    padding: var(--padding-m);
+    font-size: 0.9rem;
+    width: 70px;
+    background-color: rgb(237, 71, 71);
+    border: none;
+    border-radius: 5px;
+    color: var(--primary-text);
+    position: relative;
+    cursor: pointer;
+    right: -80%;
+}
+section .column .task button:hover{
+    background-color: rgb(222, 14, 14);
+    transition: transform 1s ease;
+    transform: scale(1.1);
+}
+.drag{
+    border: 1px dashed whitesmoke;
+    transition: transform 1s ease;
+    transform: scale(1.02);
+}
+.modal{
+    position: fixed;
+    height: 100vh;
+    width: 100vw;
+    top: 0;
+    left: 0;
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+.modal.active{
+    display: flex;
+}
+.modal .bg{
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,0.2);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+}
+.modal .center{
+    display: flex;
+    flex-direction: column;
+    z-index: 12;
+    padding: var(--padding-xxl);
+    gap: var(--padding-m);
+    background-color: var(--bg-color);
+    border-radius: 10px;
+}
+.modal .center input, textarea{
+    background-color: var(--bg-color2);
+    border: none;
+    outline: none;
+    padding: var(--padding-m);
+    border-radius: 10px;
+    color: var(--primary-text);
+}
+.modal .center button{
+        background-color: var(--bg-color2);
+        border: none;
+        color: var(--primary-text);
+        border-radius: 10px;
+        font-weight: 600;
+        padding: var(--padding-l);
+}
+.modal .center .btns{
+    display: flex;
+    justify-content: space-between;
+    gap: var(--padding-m);
+}
+.modal .center .btns button{
+    width: 100%;
+}
+
+#textArea{
+    min-width: 300px;
+    min-height: 100px;
+}
+#add-new-task{
+    background-color: #2563eb;
+    color: #ffffff;
+}
